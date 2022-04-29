@@ -1,0 +1,13 @@
+Trigger, when flight is delayed it is logged into different table 
+CREATE OR REPLACE TRIGGER DELAYEDFLIGHTS AFTER INSERT ON FLIGHT_STATUS FOR EACH ROW 
+DECLARE 
+BEGIN if updating('STATUS') 
+ 
+
+then insert into flight_status (FLIGHT_NUMBER, STATUS) values(:new.FLIGHT_NUMBER,:new.STATUS); end if; 
+END; 
+-- This is audit table for this trigger-- 
+CREATE TABLE "DELAYED_FLIGHT" 
+( "FLIGHT_NUMBER" VARCHAR2(20 BYTE), 
+"STATUS" VARCHAR2(20 BYTE) 
+); 
