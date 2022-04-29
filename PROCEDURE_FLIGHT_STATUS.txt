@@ -1,0 +1,45 @@
+--   Stored Procedure for flight details by status --
+CREATE OR REPLACE PROCEDURE FLIGHTSBYSTATUS
+( 
+IN_STATUS IN VARCHAR2
+) AS
+CURSOR STATUSOFFLIGHT is 
+select distinct f.FLIGHT_number ,f.AIRLINE_NAME 
+,f.ARRIVAL_DATE_TIME,f.departure_DATE_TIME,f.ORIGIN_AIRPORT_CODE,
+f.DESTINATION_AIRPORT_CODE,fs.STATUS from flight_segment f, flight_status fs
+where F.FLIGHT_number=FS.FLIGHT_number
+and fs.STATUS =IN_STATUS;   
+FlightStatus STATUSOFFLIGHT%rowtype;
+
+BEGIN 
+Open STATUSOFFLIGHT ;
+LOOP
+
+fetch STATUSOFFLIGHT into FlightStatus;
+EXIT WHEN STATUSOFFLIGHT%NOTFOUND;
+dbms_output.put_line (FlightStatus.FLIGHT_NUMBER || ' ' || FlightStatus.AIRLINE_NAME || ' ' || FlightStatus.ARRIVAL_DATE_TIME || ' ' || FlightStatus.departure_DATE_TIME|| ' ' ||FlightStatus.ORIGIN_AIRPORT_CODE || ' ' || FlightStatus.DESTINATION_AIRPORT_CODE || ' ' || FlightStatus.STATUS);
+END LOOP;
+
+close STATUSOFFLIGHT;
+END FLIGHTSBYSTATUS;
+
+--- 
+Testing in sql developer
+ --- 
+
+SET SERVEROUTPUT ON
+exec FLIGHTSBYSTATUS('DELAYED');
+--    OR 
+-- 
+
+SET SERVEROUTPUT ON
+exec FLIGHTSBYSTATUS('IN TRANSIST');
+--    OR 
+-- 
+SET SERVEROUTPUT ON
+exec FLIGHTSBYSTATUS('ARRIVED');
+--    OR 
+-- 
+SET SERVEROUTPUT ON
+exec FL
+IGHTSBYSTATUS('DEPARTED');
